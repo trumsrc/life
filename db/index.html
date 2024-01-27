@@ -1,0 +1,72 @@
+<script>
+Lorem = {};
+Lorem.studentsMatrix = {
+	thisObject: this,
+	//Load JSON data from server here ()
+	data : {
+		"john_a" : {"name": "John F Kennedy", "course": "Math"},
+		"bill_s" : {"name": "Bill Sunderland", "course": "Economy"},
+		"omar" : {"name": "Omar Anderson", "course": "History"},
+		"fred" : {"name": "Bert Something", "course": "Statistics"},
+		"tom" : {"name": "Tom Cruise", "course": "Law"}
+	},
+	config : {
+		primaryKey : function() {
+			return thisObject;
+		}	
+	}
+};
+
+Lorem.petMatrix = {
+	thisObject: this,
+	data : {
+		//PK name (column ("charlie") is primary key in this example		
+		"charlie" : {"name": "Charlie", "food": "Whiskas"},
+		"felix" : {"name": "Felix", "food": "Milk"},
+		"truman" : {"name": "Truman", "food": "Fish"},
+		"betty" : {"name": "Betty", "food": "Meatballs"},
+		"sphinx" : {"name": "Sphinx", "food": "Shrimps","ownerId": "john_a"}  
+	},
+	config : {
+		primaryKey : function() {
+			return thisObject.data;
+		},	
+		foreignKey: "ownerId",
+		references: Lorem.studentsMatrix
+	}
+};
+
+
+Lorem.findByRegExp =  function(matrix, columns, regExpStr, flags) {
+    let defaultFlags = "ig";
+    for(var key in matrix) {
+        let row = matrix[key];
+        for (var key2 in row) {
+			let columns = row[key2];
+			for(let i=0; i < columns.length; i++) {
+				if (columns[i]) {
+					return columns.match(new RegExp(regExpStr,  (flags) ? flags : defaultFlags));
+				} 
+			}
+		}
+	}
+}
+
+Lorem.init = function() {
+	console.log("INIT");
+	petConfig = Lorem.petMatrix.config;
+	console.log("primary key --> " + petConfig.primaryKey);
+	console.log("foreignKey key --> " + petConfig.foreignKey);
+	console.log("references --> " + petConfig.references);
+
+	for(var key in petConfig.references) {
+		console.log("petConfig: " + key + " --> " + petConfig.references[key]);		
+		for(var key2 in petConfig.references[key]) {
+//			console.log(key  +" --> " + petConfig.references[key][key2]);
+		}
+	}
+}
+
+
+Lorem.init();
+</script>
